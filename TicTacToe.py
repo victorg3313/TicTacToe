@@ -36,8 +36,7 @@ PAD  = 8
 
 BRAIN_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ttt_brain.json")
 
-# Probabilidad de que la IA "explore" (juegue un movimiento no-óptimo) por nivel.
-# Nivel 5 = 0% exploración -> siempre usa lo que aprendió, sin trucos escritos a mano.
+
 AI_EPSILON = {1: 0.60, 2: 0.40, 3: 0.20, 4: 0.08, 5: 0.0}
 
 WINS = [(0, 1, 2), (3, 4, 5), (6, 7, 8),
@@ -45,18 +44,7 @@ WINS = [(0, 1, 2), (3, 4, 5), (6, 7, 8),
         (0, 4, 8), (2, 4, 6)]
 
 
-# ==========================================================
-# CEREBRO DE IA — Aprendizaje por Refuerzo (TD-learning)
-# ==========================================================
-# En vez de reglas escritas a mano (minimax, "bloquea si...", etc.)
-# la IA juega miles de partidas contra sí misma y va ajustando una
-# tabla de valores V(estado) que estima "qué tan buena es esta
-# posición para mí". Esto SÍ es machine learning: nadie le dice cómo
-# jugar, ella lo descubre por prueba y error (self-play).
-#
-# V se guarda en disco (ttt_brain.json) para no tener que reentrenar
-# cada vez que abres el juego.
-# ==========================================================
+
 V = {}  # estado (string de 9) -> valor aprendido (0.0 a 1.0)
 
 
@@ -150,7 +138,7 @@ def save_brain(path=BRAIN_FILE):
         with open(path, "w", encoding="utf-8") as f:
             json.dump(V, f)
     except OSError:
-        pass  # si no se puede escribir, simplemente no persiste
+        pass  
 
 
 def load_brain(path=BRAIN_FILE):
@@ -186,9 +174,6 @@ def ai_choose_move(flat_board, level):
     return random.choice(best_actions)
 
 
-# ==========================================================
-# PANTALLA DE ENTRENAMIENTO (solo la primera vez)
-# ==========================================================
 class TrainingSplash:
     def __init__(self, root, on_done):
         self.root = root
@@ -242,9 +227,8 @@ class TrainingSplash:
             self.root.after(80, self._poll)
 
 
-# ==========================================================
 # JUEGO
-# ==========================================================
+
 class TicTacToeTech:
     def __init__(self, root):
         self.root = root
