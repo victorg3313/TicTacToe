@@ -6,9 +6,7 @@ import threading
 import json
 import os
 
-# ==========================================
-# TEMA CYBER/TECH v4 — ahora con IA entrenada
-# ==========================================
+
 COLOR_BG        = "#05060c"
 COLOR_CARD_BG   = "#0d1020"
 COLOR_CARD_EDGE = "#1c2140"
@@ -45,7 +43,7 @@ WINS = [(0, 1, 2), (3, 4, 5), (6, 7, 8),
 
 
 
-V = {}  # estado (string de 9) -> valor aprendido (0.0 a 1.0)
+V = {}  
 
 
 def check_winner_str(state):
@@ -73,7 +71,7 @@ def get_value(state):
     elif winner == "O":
         v = 0.0
     else:
-        v = 0.5  # posición desconocida o empate: neutral
+        v = 0.5  
     V[state] = v
     return v
 
@@ -183,7 +181,7 @@ class TrainingSplash:
         self.win.title("Preparando IA...")
         self.win.configure(bg=COLOR_BG)
         self.win.resizable(False, False)
-        self.win.protocol("WM_DELETE_WINDOW", lambda: None)  # no cerrar a medias
+        self.win.protocol("WM_DELETE_WINDOW", lambda: None)  
 
         frame = tk.Frame(self.win, bg=COLOR_CARD_BG, padx=30, pady=26,
                           highlightbackground=COLOR_CARD_EDGE, highlightthickness=1)
@@ -227,7 +225,6 @@ class TrainingSplash:
             self.root.after(80, self._poll)
 
 
-# JUEGO
 
 class TicTacToeTech:
     def __init__(self, root):
@@ -257,7 +254,6 @@ class TicTacToeTech:
         self._build_ui()
         self._center_window()
 
-    # ---------------- sonido (no bloqueante) ----------------
     def play_sound(self, tipo):
         if platform.system() != "Windows":
             return
@@ -280,7 +276,6 @@ class TicTacToeTech:
 
         threading.Thread(target=_beep, daemon=True).start()
 
-    # ---------------- interfaz ----------------
     def _build_ui(self):
         outer = tk.Frame(self.root, bg=COLOR_BG)
         outer.pack(padx=18, pady=18)
@@ -356,7 +351,7 @@ class TicTacToeTech:
     def _score_text(self):
         return f"X  {self.score['X']}    ·    O  {self.score['O']}    ·    Empates  {self.score['Empates']}"
 
-    # ---------------- dibujo del tablero ----------------
+ 
     def _cell_bbox(self, r, c):
         x0 = PAD + c * (CELL + PAD)
         y0 = PAD + r * (CELL + PAD)
@@ -400,7 +395,7 @@ class TicTacToeTech:
         ]
         return self.canvas.create_polygon(points, smooth=True, **kwargs)
 
-    # ---------------- interacción ----------------
+
     def _cell_at(self, x, y):
         for r in range(3):
             for c in range(3):
@@ -426,7 +421,7 @@ class TicTacToeTech:
         if cell:
             self.set_tile(*cell)
 
-    # ---------------- modos ----------------
+  
     def set_mode_pvp(self):
         self.vs_ai = False
         self.btn_pvp.config(bg=COLOR_ACCENT, fg="white")
@@ -446,7 +441,7 @@ class TicTacToeTech:
             nombre, icono = NOMBRES_NIVELES[self.ai_level]
             self.lbl_level.config(text=f"{icono}  NIVEL {self.ai_level} · {nombre.upper()}", fg=COLOR_X)
 
-    # ---------------- turnos ----------------
+ 
     def set_tile(self, row, col):
         if self.game_over or self.board[row][col] is not None:
             return
@@ -479,7 +474,7 @@ class TicTacToeTech:
         idx = ai_choose_move(flat, self.ai_level)
         self.set_tile(idx // 3, idx % 3)
 
-    # ---------------- victoria ----------------
+
     def evaluate_winner(self):
         b = self.board
         lines = [b[i] for i in range(3)] + [[b[r][i] for r in range(3)] for i in range(3)]
@@ -537,7 +532,7 @@ class TicTacToeTech:
 
         return False
 
-    # ---------------- reinicio / centrado ----------------
+
     def reset_game(self):
         self.turns = 0
         self.game_over = False
@@ -554,9 +549,7 @@ class TicTacToeTech:
         self.root.geometry(f"{w}x{h}+{(ws - w) // 2}+{(hs - h) // 2}")
 
 
-# ==========================================================
-# ARRANQUE
-# ==========================================================
+
 def launch_game(root):
     root.deiconify()
     TicTacToeTech(root)
@@ -566,7 +559,7 @@ if __name__ == "__main__":
     root = tk.Tk()
 
     if load_brain():
-        # ya existe un cerebro entrenado guardado en disco -> directo al juego
+    
         launch_game(root)
     else:
         root.withdraw()
